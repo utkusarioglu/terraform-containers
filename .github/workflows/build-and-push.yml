@@ -25,10 +25,22 @@ jobs:
           - dockerfile: src/Dockerfile.dev
             base_image_tag: "1.2"
             image_name: terraform-devcontainer
-            docker_hub_repo_readme_file_path: src/DOCKER_README.md
+            devcontainer_subfolder: src/vanilla
+            docker_hub_repo_readme_file_path: src/vanilla/DOCKER_README.md
             docker_hub_repo_short_description: |
               Devcontainer for Terraform and Terratest workloads
-            additional_files_to_watch: ""
+            additional_files_to_watch: |
+              src/vanilla/**
+
+          - dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.2"
+            image_name: terraform-aws-eks-devcontainer
+            devcontainer_subfolder: src/aws-eks
+            docker_hub_repo_readme_file_path: src/aws-eks/DOCKER_README.md
+            docker_hub_repo_short_description: |
+              Devcontainer for AWS EKS workloads that run on Terraform and Terratest
+            additional_files_to_watch: |
+              src/aws-eks/**
 
     steps:
       - name: Checkout code
@@ -85,7 +97,7 @@ jobs:
           dockerfile_path: ${{ matrix.images.dockerfile }}
           build_args: |
             BASE_IMAGE_TAG=${{ matrix.images.base_image_tag }}
-          devcontainer_subfolder: src
+          devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
           devcontainer_run_cmd_path: ""
           docker_hub_repo_short_description: |
             ${{ matrix.images.docker_hub_repo_short_description }}

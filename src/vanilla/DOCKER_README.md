@@ -4,7 +4,7 @@ Devcontainers to develop with Terraform, Terratest and Go
 
 ## Features
 
-- Built in vim and git
+- Built in vim, git, github cli and ssh server
 - A colorfun `.bashrc` with `vi` 
 - An `.inputrc` file for for `vi` state indicator
 - A script file for creating `.env.example` files.
