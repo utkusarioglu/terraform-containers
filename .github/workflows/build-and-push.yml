@@ -45,6 +45,17 @@ jobs:
             additional_apt_packages: |
               groff
 
+          - dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.2"
+            image_name: terraform-kubernetes-devcontainer
+            devcontainer_subfolder: src/kubernetes
+            docker_hub_repo_readme_file_path: src/kubernetes/DOCKER_README.md
+            docker_hub_repo_short_description: |
+              Devcontainer for Kubernetes workloads that run on Terraform and Terratest
+            additional_files_to_watch: |
+              src/kubernetes/**
+            additional_apt_packages: ""
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
