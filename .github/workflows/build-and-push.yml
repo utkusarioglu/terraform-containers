@@ -1,0 +1,100 @@
+name: build-and-push
+
+on:
+  push:
+    tags:
+      - "**.**.**"
+      - feature/**/**
+      - experiment/**/**/**
+    paths:
+      - src/**
+      - .github/workflows/build-and-push.yml
+  workflow_dispatch:
+
+env:
+  CACHE_FROM_SRC: /tmp/.buildx-cache
+  CACHE_TO_DEST: /tmp/.buildx-cache-new
+
+jobs:
+  build-and-push:
+    name: build-and-push
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        images:
+          - dockerfile: src/Dockerfile.dev
+            image_name: terraform-devcontainer
+            docker_hub_repo_readme_file_path: src/DOCKER_README.md
+            docker_hub_repo_short_description: |
+              Devcontainer for Terraform and Terratest workloads
+            additional_files_to_watch: ""
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed_files
+        uses: tj-actions/changed-files@v25
+        with:
+          files: |
+            ${{ matrix.images.dockerfile }}
+            ${{ matrix.images.additional_files_to_watch }}
+            .github/workflows/build-and-push.yml
+
+      - name: Get latest tag
+        id: latest_tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        with:
+          fallback: tag-unavailable
+
+      - name: Declare run state
+        id: run_state
+        run: |
+          if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
+            [ ${{ github.event_name }} == workflow_dispatch ] || \
+            [ ${{ steps.latest_tag.outputs.tag }} != tag-unavailable ];
+          then
+            echo "::set-output name=run_docker_build::true"
+            echo "::debug::Docker build will carry out as expected."
+          else
+            echo "::set-output name=run_docker_build::false"
+            echo "Docker build is cancelled as the required conditions for a run haven't been met"
+          fi
+
+      - name: Variables
+        if: steps.run_state.outputs.run_docker_build == 'true'
+        id: variables
+        run: |
+          repo_tag=${{ steps.latest_tag.outputs.tag }}
+          image_tag=${repo_tag//\//-}
+          image_ref=${{ matrix.images.image_name }}:$image_tag
+          echo "::set-output name=image_tag::$image_tag"
+
+      - name: Build and push ${{ steps.variables.outputs.image_ref }}
+        if: steps.run_state.outputs.run_docker_build == 'true'
+        uses: utkusarioglu/devcontainer-build@main
+        with:
+          docker_hub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          docker_hub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          image_name: ${{ matrix.images.image_name }}
+          image_tag: ${{ steps.variables.outputs.image_tag }}
+          dockerfile_path: ${{ matrix.images.dockerfile }}
+          build_args: ""
+          devcontainer_subfolder: src
+          devcontainer_run_cmd_path: ""
+          docker_hub_repo_short_description: |
+            ${{ matrix.images.docker_hub_repo_short_description }}
+          docker_hub_repo_readme_file_path: |
+            ${{ matrix.images.docker_hub_repo_readme_file_path }}
+
+      - name: Telegram notifications
+        if: always()
+        uses: utkusarioglu/telegram-notifications@main
+        with:
+          telegram_id: ${{ secrets.TELEGRAM_ID }}
+          telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
+          job_status: ${{ job.status }}
+          github_context: ${{ toJson(github) }}

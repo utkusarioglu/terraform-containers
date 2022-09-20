@@ -1,0 +1,24 @@
+FROM austincloud/terratest
+
+# This one is set by the base image
+ARG USERNAME=terratest
+ARG HOME=/$USERNAME
+
+# Gists
+ADD https://gist.githubusercontent.com/utkusarioglu/2d4be44dc7707afccd540ad99ba385e6/raw/create-env-example.sh \
+  /scripts/create-env-example.sh
+ADD https://gist.githubusercontent.com/utkusarioglu/3523b00578807d63b05399fe57a4b2a7/raw/.bashrc \
+  $HOME/.bashrc
+ADD https://gist.githubusercontent.com/utkusarioglu/d5c216c744460c45bf6260d0de4131b4/raw/.inputrc \
+  $HOME/.inputrc
+
+USER root
+
+RUN chmod +x \
+  /scripts/create-env-example.sh \
+  $HOME/.bashrc \
+  $HOME/.inputrc
+
+USER $USERNAME
+
+COPY scripts /scripts
