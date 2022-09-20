@@ -1,0 +1,18 @@
+{
+  "image": "${localEnv:IMAGE_NAME}:${localEnv:IMAGE_TAG}",
+  "features": {
+    "github-cli": "latest",
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    },
+    "kubectl-helm-minikube": {
+      "kubectl": "latest",
+      "helm": "latest",
+      "minikube": "none",
+      "non-root": "automatic"
+    },
+    "ghcr.io/devcontainers/features/aws-cli:1": {
+      "version": "latest"
+    }
+  }
+}

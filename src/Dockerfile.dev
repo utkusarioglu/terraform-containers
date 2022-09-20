@@ -7,6 +7,11 @@ ARG USERNAME=terratest
 ARG GROUP=terratest
 ARG HOME=/$USERNAME
 
+USER root
+RUN apt update && apt install -y \
+  vim
+USER $USERNAME
+
 # Gists
 ADD --chown=${USERNAME}:${GROUP} \
   https://gist.githubusercontent.com/utkusarioglu/2d4be44dc7707afccd540ad99ba385e6/raw/create-env-example.sh \
