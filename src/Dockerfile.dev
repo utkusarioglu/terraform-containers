@@ -1,25 +1,26 @@
 ARG BASE_IMAGE_TAG
 FROM austincloud/terratest:$BASE_IMAGE_TAG
 
-# This one is set by the base image
+# These args are set by the base image and shall not be 
+# modified save a drastic change.
 ARG USERNAME=terratest
+ARG GROUP=terratest
 ARG HOME=/$USERNAME
 
 # Gists
-ADD https://gist.githubusercontent.com/utkusarioglu/2d4be44dc7707afccd540ad99ba385e6/raw/create-env-example.sh \
+ADD --chown=${USERNAME}:${GROUP} \
+  https://gist.githubusercontent.com/utkusarioglu/2d4be44dc7707afccd540ad99ba385e6/raw/create-env-example.sh \
   /scripts/create-env-example.sh
-ADD https://gist.githubusercontent.com/utkusarioglu/3523b00578807d63b05399fe57a4b2a7/raw/.bashrc \
+ADD --chown=${USERNAME}:${GROUP} \
+  https://gist.githubusercontent.com/utkusarioglu/3523b00578807d63b05399fe57a4b2a7/raw/.bashrc \
   $HOME/.bashrc
-ADD https://gist.githubusercontent.com/utkusarioglu/d5c216c744460c45bf6260d0de4131b4/raw/.inputrc \
+ADD --chown=${USERNAME}:${GROUP} \
+  https://gist.githubusercontent.com/utkusarioglu/d5c216c744460c45bf6260d0de4131b4/raw/.inputrc \
   $HOME/.inputrc
-
-USER root
 
 RUN chmod +x \
   /scripts/create-env-example.sh \
   $HOME/.bashrc \
   $HOME/.inputrc
-
-USER $USERNAME
 
 COPY scripts /scripts
