@@ -1,4 +1,5 @@
-FROM austincloud/terratest
+ARG BASE_IMAGE_TAG
+FROM austincloud/terratest:$BASE_IMAGE_TAG
 
 # This one is set by the base image
 ARG USERNAME=terratest
