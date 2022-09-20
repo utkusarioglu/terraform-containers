@@ -4,7 +4,7 @@ Devcontainers for AWS EKS to develop with Terraform, Terratest and Go
 
 ## Features
 
-- Built in vim, git, github cli, aws cli, ssh server, kubectl and helm
+- Built in vim, jq, git, github cli, aws cli, ssh server, kubectl and helm
 - A colorfun `.bashrc` with `vi` 
 - An `.inputrc` file for for `vi` state indicator
 - A script file for creating `.env.example` files.

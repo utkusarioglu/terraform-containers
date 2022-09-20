@@ -9,7 +9,8 @@ ARG HOME=/$USERNAME
 
 USER root
 RUN apt update && apt install -y \
-  vim
+  vim \
+  jq
 USER $USERNAME
 
 # Gists
