@@ -23,6 +23,7 @@ jobs:
       matrix:
         images:
           - dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.2"
             image_name: terraform-devcontainer
             docker_hub_repo_readme_file_path: src/DOCKER_README.md
             docker_hub_repo_short_description: |
@@ -69,7 +70,7 @@ jobs:
         id: variables
         run: |
           repo_tag=${{ steps.latest_tag.outputs.tag }}
-          image_tag=${repo_tag//\//-}
+          image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
           image_ref=${{ matrix.images.image_name }}:$image_tag
           echo "::set-output name=image_tag::$image_tag"
 
@@ -82,7 +83,8 @@ jobs:
           image_name: ${{ matrix.images.image_name }}
           image_tag: ${{ steps.variables.outputs.image_tag }}
           dockerfile_path: ${{ matrix.images.dockerfile }}
-          build_args: ""
+          build_args: |
+            BASE_IMAGE_TAG=${{ matrix.images.base_image_tag }}
           devcontainer_subfolder: src
           devcontainer_run_cmd_path: ""
           docker_hub_repo_short_description: |
