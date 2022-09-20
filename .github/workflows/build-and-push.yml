@@ -31,6 +31,7 @@ jobs:
               Devcontainer for Terraform and Terratest workloads
             additional_files_to_watch: |
               src/vanilla/**
+            additional_apt_packages: ""
 
           - dockerfile: src/Dockerfile.dev
             base_image_tag: "1.2"
@@ -41,6 +42,8 @@ jobs:
               Devcontainer for AWS EKS workloads that run on Terraform and Terratest
             additional_files_to_watch: |
               src/aws-eks/**
+            additional_apt_packages: |
+              groff
 
     steps:
       - name: Checkout code
@@ -97,6 +100,7 @@ jobs:
           dockerfile_path: ${{ matrix.images.dockerfile }}
           build_args: |
             BASE_IMAGE_TAG=${{ matrix.images.base_image_tag }}
+            ADDITIONAL_APT_PACKAGES=${{ matrix.images.additional_apt_packages }}
           devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
           devcontainer_run_cmd_path: ""
           docker_hub_repo_short_description: |

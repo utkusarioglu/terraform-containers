@@ -6,11 +6,13 @@ FROM austincloud/terratest:$BASE_IMAGE_TAG
 ARG USERNAME=terratest
 ARG GROUP=terratest
 ARG HOME=/$USERNAME
+ARG ADDITIONAL_APT_PACKAGES=""
 
 USER root
 RUN apt update && apt install -y \
   vim \
-  jq
+  jq \
+  $ADDITIONAL_APT_PACKAGES
 USER $USERNAME
 
 # Gists
