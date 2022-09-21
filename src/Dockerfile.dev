@@ -12,6 +12,7 @@ USER root
 RUN apt update && apt install -y \
   vim \
   jq \
+  less \
   $ADDITIONAL_APT_PACKAGES
 USER $USERNAME
 
