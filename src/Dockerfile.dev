@@ -14,6 +14,11 @@ RUN apt update && apt install -y \
   jq \
   less \
   $ADDITIONAL_APT_PACKAGES
+
+RUN curl -sSLo install.sh https://install.hclq.sh && \
+  sh install.sh && \
+  rm install.sh
+
 USER $USERNAME
 
 # Gists
