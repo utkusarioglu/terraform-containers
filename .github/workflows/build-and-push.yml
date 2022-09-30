@@ -35,13 +35,15 @@ jobs:
 
           - dockerfile: src/Dockerfile.dev
             base_image_tag: "1.2"
-            image_name: terraform-aws-eks-devcontainer
-            devcontainer_subfolder: src/aws-eks
-            docker_hub_repo_readme_file_path: src/aws-eks/DOCKER_README.md
+            image_name: terraform-eks-devcontainer
+            devcontainer_subfolder: src/eks
+            docker_hub_repo_readme_file_path: src/eks/DOCKER_README.md
             docker_hub_repo_short_description: |
               Devcontainer for AWS EKS workloads that run on Terraform and Terratest
             additional_files_to_watch: |
-              src/aws-eks/**
+              src/eks/**
+            # Groff is needed because without it, AWS cli documentation doesn't
+            # work as expected
             additional_apt_packages: |
               groff
 
