@@ -24,7 +24,7 @@ jobs:
         images:
           - dockerfile: src/Dockerfile.dev
             base_image_tag: "1.2"
-            image_name: terraform-devcontainer
+            image_name: tf-devcontainer
             devcontainer_subfolder: src/vanilla
             docker_hub_repo_readme_file_path: src/vanilla/DOCKER_README.md
             docker_hub_repo_short_description: |
@@ -32,10 +32,23 @@ jobs:
             additional_files_to_watch: |
               src/vanilla/**
             additional_apt_packages: ""
+            additional_provisioning_script: ""
 
           - dockerfile: src/Dockerfile.dev
             base_image_tag: "1.2"
-            image_name: terraform-eks-devcontainer
+            image_name: tf-k8s-devcontainer
+            devcontainer_subfolder: src/k8s
+            docker_hub_repo_readme_file_path: src/k8s/DOCKER_README.md
+            docker_hub_repo_short_description: |
+              Devcontainer for Kubernetes workloads that run on Terraform and Terratest
+            additional_files_to_watch: |
+              src/k8s/**
+            additional_apt_packages: ""
+            additional_provisioning_script: "src/k8s/provisioning.sh"
+
+          - dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.2"
+            image_name: tf-eks-devcontainer
             devcontainer_subfolder: src/eks
             docker_hub_repo_readme_file_path: src/eks/DOCKER_README.md
             docker_hub_repo_short_description: |
@@ -46,17 +59,7 @@ jobs:
             # work as expected
             additional_apt_packages: |
               groff
-
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
-            image_name: terraform-kubernetes-devcontainer
-            devcontainer_subfolder: src/kubernetes
-            docker_hub_repo_readme_file_path: src/kubernetes/DOCKER_README.md
-            docker_hub_repo_short_description: |
-              Devcontainer for Kubernetes workloads that run on Terraform and Terratest
-            additional_files_to_watch: |
-              src/kubernetes/**
-            additional_apt_packages: ""
+            additional_provisioning_script: ""
 
     steps:
       - name: Checkout code
@@ -113,7 +116,9 @@ jobs:
           dockerfile_path: ${{ matrix.images.dockerfile }}
           build_args: |
             BASE_IMAGE_TAG=${{ matrix.images.base_image_tag }}
+            ROOT_PASS=${{ secrets.DOCKER_IMAGE_ROOT_PASS }}
             ADDITIONAL_APT_PACKAGES=${{ matrix.images.additional_apt_packages }}
+            ADDITIONAL_PROVISIONING_SCRIPT=${{ matrix.images.additional_provisioning_script }}
           devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
           devcontainer_run_cmd_path: ""
           docker_hub_repo_short_description: |

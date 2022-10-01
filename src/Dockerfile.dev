@@ -3,12 +3,20 @@ FROM austincloud/terratest:$BASE_IMAGE_TAG
 
 # These args are set by the base image and shall not be 
 # modified save a drastic change.
-ARG USERNAME=terratest
+ARG BASE_IMAGE_USERNAME=terratest
+ARG USERNAME=terraform
+ARG ROOT_PASS
 ARG GROUP=terratest
-ARG HOME=/$USERNAME
-ARG ADDITIONAL_APT_PACKAGES=""
+ARG HOME=/home/$USERNAME
+ARG ADDITIONAL_APT_PACKAGES
+ARG ADDITIONAL_PROVISIONING_SCRIPT
 
 USER root
+
+RUN usermod -l $USERNAME $BASE_IMAGE_USERNAME
+RUN usermod -m -d $HOME $USERNAME
+RUN echo "root:$ROOT_PASS" | chpasswd
+
 RUN apt update && apt install -y \
   vim \
   jq \
@@ -18,6 +26,9 @@ RUN apt update && apt install -y \
 RUN curl -sSLo install.sh https://install.hclq.sh && \
   sh install.sh && \
   rm install.sh
+
+COPY $ADDITIONAL_PROVISIONING_SCRIPT /scripts/provisioning.sh
+RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
 
 USER $USERNAME
 
