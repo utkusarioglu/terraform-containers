@@ -10,6 +10,9 @@
       "helm": "latest",
       "minikube": "none",
       "non-root": "automatic"
+    },
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {
+      "version": "latest"
     }
   }
 }
