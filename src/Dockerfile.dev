@@ -37,6 +37,8 @@ COPY $ADDITIONAL_PROVISIONING_SCRIPT /scripts/provisioning.sh
 RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
 
 USER $USERNAME
+RUN mkdir -p $HOME/.vscode-server/extensions
+RUN mkdir -p $HOME/.vscode-server-insiders/extensions
 
 # Gists
 ADD --chown=${USERNAME}:${GROUP} \
