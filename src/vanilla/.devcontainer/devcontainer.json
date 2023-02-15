@@ -9,7 +9,9 @@
       "installTFsec": true,
       "installTerraformDocs": true
     },
-    "ghcr.io/devcontainers-contrib/features/neovim-apt-get:1": {},
-    "ghcr.io/devcontainers/features/aws-cli:1": {}
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube: 1": {
+      "minikube": "none"
+    }
   }
 }
