@@ -23,7 +23,7 @@ jobs:
       matrix:
         images:
           - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
+            base_image_tag: "1.3"
             image_name: tf-devcontainer
             devcontainer_subfolder: src/vanilla
             docker_hub_repo_readme_file_path: src/vanilla/DOCKER_README.md
@@ -34,32 +34,32 @@ jobs:
             additional_apt_packages: ""
             additional_provisioning_script: ""
 
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
-            image_name: tf-k8s-devcontainer
-            devcontainer_subfolder: src/k8s
-            docker_hub_repo_readme_file_path: src/k8s/DOCKER_README.md
-            docker_hub_repo_short_description: |
-              Devcontainer for Kubernetes workloads that run on Terraform and Terratest
-            additional_files_to_watch: |
-              src/k8s/**
-            additional_apt_packages: ""
-            additional_provisioning_script: "src/k8s/provisioning.sh"
+          # - dockerfile: src/Dockerfile.dev
+          #   base_image_tag: "1.2"
+          #   image_name: tf-k8s-devcontainer
+          #   devcontainer_subfolder: src/k8s
+          #   docker_hub_repo_readme_file_path: src/k8s/DOCKER_README.md
+          #   docker_hub_repo_short_description: |
+          #     Devcontainer for Kubernetes workloads that run on Terraform and Terratest
+          #   additional_files_to_watch: |
+          #     src/k8s/**
+          #   additional_apt_packages: ""
+          #   additional_provisioning_script: "src/k8s/provisioning.sh"
 
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
-            image_name: tf-eks-devcontainer
-            devcontainer_subfolder: src/eks
-            docker_hub_repo_readme_file_path: src/eks/DOCKER_README.md
-            docker_hub_repo_short_description: |
-              Devcontainer for AWS EKS workloads that run on Terraform and Terratest
-            additional_files_to_watch: |
-              src/eks/**
-            # Groff is needed because without it, AWS cli documentation doesn't
-            # work as expected
-            additional_apt_packages: |
-              groff
-            additional_provisioning_script: ""
+          # - dockerfile: src/Dockerfile.dev
+          #   base_image_tag: "1.2"
+          #   image_name: tf-eks-devcontainer
+          #   devcontainer_subfolder: src/eks
+          #   docker_hub_repo_readme_file_path: src/eks/DOCKER_README.md
+          #   docker_hub_repo_short_description: |
+          #     Devcontainer for AWS EKS workloads that run on Terraform and Terratest
+          #   additional_files_to_watch: |
+          #     src/eks/**
+          #   # Groff is needed because without it, AWS cli documentation doesn't
+          #   # work as expected
+          #   additional_apt_packages: |
+          #     groff
+          #   additional_provisioning_script: ""
 
     steps:
       - name: Checkout code
