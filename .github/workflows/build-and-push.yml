@@ -32,7 +32,7 @@ jobs:
             additional_files_to_watch: |
               src/vanilla/**
             additional_apt_packages: ""
-            additional_provisioning_script: ""
+            additional_provisioning_script: "src/vanilla/provisioning.sh"
 
           # - dockerfile: src/Dockerfile.dev
           #   base_image_tag: "1.2"
