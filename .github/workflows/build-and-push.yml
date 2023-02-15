@@ -135,7 +135,7 @@ jobs:
         id: variables
         run: |
           repo_tag=${{ github.ref_name }}
-          image_tag=${repo_tag//\//-}
+          image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
           image_ref=${{ matrix.images.containerName }}:$image_tag
           echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
 
