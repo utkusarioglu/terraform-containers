@@ -67,32 +67,66 @@ jobs:
         with:
           fetch-depth: 2
 
+      # - name: Get changed files
+      #   id: changed_files
+      #   uses: tj-actions/changed-files@v25
+      #   with:
+      #     files: |
+      #       ${{ matrix.images.dockerfile }}
+      #       ${{ matrix.images.additional_files_to_watch }}
+      #       .github/workflows/build-and-push.yml
+
+      # - name: Get latest tag
+      #   id: latest_tag
+      #   uses: WyriHaximus/github-action-get-previous-tag@v1
+      #   with:
+      #     fallback: tag-unavailable
+
+      # - name: Declare run state
+      #   id: run_state
+      #   run: |
+      #     if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
+      #       [ ${{ github.event_name }} == workflow_dispatch ] || \
+      #       [ ${{ steps.latest_tag.outputs.tag }} != tag-unavailable ];
+      #     then
+      #       echo "::set-output name=run_docker_build::true"
+      #       echo "::debug::Docker build will carry out as expected."
+      #     else
+      #       echo "::set-output name=run_docker_build::false"
+      #       echo "Docker build is cancelled as the required conditions for a run haven't been met"
+      #     fi
+
+      # - name: Variables
+      #   if: steps.run_state.outputs.run_docker_build == 'true'
+      #   id: variables
+      #   run: |
+      #     repo_tag=${{ steps.latest_tag.outputs.tag }}
+      #     image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
+      #     image_ref=${{ matrix.images.image_name }}:$image_tag
+      #     echo "::set-output name=image_tag::$image_tag"
+
       - name: Get changed files
         id: changed_files
         uses: tj-actions/changed-files@v25
         with:
           files: |
             ${{ matrix.images.dockerfile }}
-            ${{ matrix.images.additional_files_to_watch }}
+            ${{ matrix.images.additionalFilesToWatch }}
             .github/workflows/build-and-push.yml
-
-      - name: Get latest tag
-        id: latest_tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        with:
-          fallback: tag-unavailable
 
       - name: Declare run state
         id: run_state
         run: |
-          if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
-            [ ${{ github.event_name }} == workflow_dispatch ] || \
-            [ ${{ steps.latest_tag.outputs.tag }} != tag-unavailable ];
+          if [ ${{ github.ref_type }} == tag ] && \
+            ( \
+              [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
+              [ ${{ github.event_name }} == workflow_dispatch ] \
+            );
           then
-            echo "::set-output name=run_docker_build::true"
+            echo "run_docker_build=true" >> $GITHUB_OUTPUT
             echo "::debug::Docker build will carry out as expected."
           else
-            echo "::set-output name=run_docker_build::false"
+            echo "run_docker_build=false" >> $GITHUB_OUTPUT
             echo "Docker build is cancelled as the required conditions for a run haven't been met"
           fi
 
@@ -100,10 +134,11 @@ jobs:
         if: steps.run_state.outputs.run_docker_build == 'true'
         id: variables
         run: |
-          repo_tag=${{ steps.latest_tag.outputs.tag }}
-          image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
-          image_ref=${{ matrix.images.image_name }}:$image_tag
-          echo "::set-output name=image_tag::$image_tag"
+          repo_tag=${{ github.ref_name }}
+          image_tag=${repo_tag//\//-}
+          image_ref=${{ matrix.images.containerName }}:$image_tag
+          echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
+
 
       - name: Build and push ${{ steps.variables.outputs.image_ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
