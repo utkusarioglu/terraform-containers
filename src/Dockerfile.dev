@@ -31,13 +31,14 @@ RUN wget \
   chmod +x /usr/bin/yq
 
 # Neovim requires manual retrieval of the latest version
-# as the apt package is quite old
+# as the apt package and devcontainer feature is quite old
 RUN wget https://github.com/neovim/neovim/releases/download/v0.8.0/nvim-linux64.deb \
   -O /neovim.deb
 RUN apt install -y /neovim.deb 
 RUN rm /neovim.deb
 ENV EDITOR=nvim
 
+# hclq is not available in devcontainer features
 RUN curl -sSLo install.sh https://install.hclq.sh && \
   sh install.sh && \
   rm install.sh
