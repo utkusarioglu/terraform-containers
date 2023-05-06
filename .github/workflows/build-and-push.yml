@@ -22,8 +22,9 @@ jobs:
     strategy:
       matrix:
         images:
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.3"
+          - enabled: false
+            dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.4"
             image_name: tf-devcontainer
             devcontainer_subfolder: src/vanilla
             docker_hub_repo_readme_file_path: src/vanilla/DOCKER_README.md
@@ -34,8 +35,9 @@ jobs:
             additional_apt_packages: ""
             additional_provisioning_script: ""
 
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.3"
+          - enabled: true
+            dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.4"
             image_name: tf-k8s-devcontainer
             devcontainer_subfolder: src/k8s
             docker_hub_repo_readme_file_path: src/k8s/DOCKER_README.md
@@ -80,6 +82,7 @@ jobs:
         id: run_state
         run: |
           if [ ${{ github.ref_type }} == tag ] && \
+             [ ${{ matrix.images.enabled }} == 'true' ] && \
             ( \
               [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
               [ ${{ github.event_name }} == workflow_dispatch ] \
@@ -100,7 +103,6 @@ jobs:
           image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
           image_ref=${{ matrix.images.containerName }}:$image_tag
           echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
-
 
       - name: Build and push ${{ steps.variables.outputs.image_ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
