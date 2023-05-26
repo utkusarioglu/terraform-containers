@@ -68,7 +68,7 @@ ADD --chown=${USERNAME}:${GROUP} \
   $HOME/.inputrc
 
 # This makes elam easier to use
-RUN echo "alias elam=$ELAM_ABSPATH/elam.sh" >> .bashrc
+RUN echo "alias elam=$ELAM_ABSPATH/elam.sh" >> $HOME/.bashrc
 
 RUN chmod +x \
   /scripts/create-env-example.sh \
