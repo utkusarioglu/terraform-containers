@@ -21,6 +21,7 @@ RUN echo "root:$ROOT_PASS" | chpasswd
 RUN apt update && apt install -y \
   jq \
   less \
+  zip \
   $ADDITIONAL_APT_PACKAGES
   # git-crypt \
 
