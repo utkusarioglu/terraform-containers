@@ -12,6 +12,8 @@ ARG ADDITIONAL_APT_PACKAGES
 ARG ADDITIONAL_PROVISIONING_SCRIPT
 ARG YQ_VERSION="v4.28.1"
 
+ARG ELAM_ABSPATH="$HOME/elam"
+
 USER root
 
 RUN usermod -l $USERNAME $BASE_IMAGE_USERNAME
@@ -39,6 +41,9 @@ RUN apt install -y /neovim.deb
 RUN rm /neovim.deb
 ENV EDITOR=nvim
 
+# Elam
+RUN git clone https://github.com/utkusarioglu/elam.git $ELAM_ABSPATH
+
 # hclq is not available in devcontainer features
 RUN curl -sSLo install.sh https://install.hclq.sh && \
   sh install.sh && \
@@ -61,6 +66,9 @@ ADD --chown=${USERNAME}:${GROUP} \
 ADD --chown=${USERNAME}:${GROUP} \
   https://gist.githubusercontent.com/utkusarioglu/d5c216c744460c45bf6260d0de4131b4/raw/.inputrc \
   $HOME/.inputrc
+
+# This makes elam easier to use
+RUN echo "alias elam=$ELAM_ABSPATH/elam.sh" >> .bashrc
 
 RUN chmod +x \
   /scripts/create-env-example.sh \
