@@ -57,6 +57,8 @@ RUN curl -sSLo install.sh https://install.hclq.sh && \
 
 # infracost
 RUN curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+RUN mkdir -p $HOME/.config/infracost && \
+  chown -R $USERNAME:$GROUP $HOME/.config/infracost
 
 COPY $ADDITIONAL_PROVISIONING_SCRIPT /scripts/provisioning.sh
 RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
@@ -64,7 +66,6 @@ RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
 USER $USERNAME
 RUN mkdir -p $HOME/.vscode-server/extensions
 RUN mkdir -p $HOME/.vscode-server-insiders/extensions
-RUN mkdir -p $HOME/.config/infracost
 
 # Gists
 ADD --chown=${USERNAME}:${GROUP} \
