@@ -55,6 +55,9 @@ RUN curl -sSLo install.sh https://install.hclq.sh && \
   sh install.sh && \
   rm install.sh
 
+# infracost
+RUN curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+
 COPY $ADDITIONAL_PROVISIONING_SCRIPT /scripts/provisioning.sh
 RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
 
