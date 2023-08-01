@@ -64,6 +64,7 @@ RUN if [ -f /scripts/provisioning.sh ]; then /scripts/provisioning.sh; fi
 USER $USERNAME
 RUN mkdir -p $HOME/.vscode-server/extensions
 RUN mkdir -p $HOME/.vscode-server-insiders/extensions
+RUN mkdir -p $HOME/.config/infracost
 
 # Gists
 ADD --chown=${USERNAME}:${GROUP} \
