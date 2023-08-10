@@ -22,8 +22,9 @@ jobs:
     strategy:
       matrix:
         images:
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
+          - enabled: false
+            dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.4"
             image_name: tf-devcontainer
             devcontainer_subfolder: src/vanilla
             docker_hub_repo_readme_file_path: src/vanilla/DOCKER_README.md
@@ -34,8 +35,9 @@ jobs:
             additional_apt_packages: ""
             additional_provisioning_script: ""
 
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
+          - enabled: true
+            dockerfile: src/Dockerfile.dev
+            base_image_tag: "1.4"
             image_name: tf-k8s-devcontainer
             devcontainer_subfolder: src/k8s
             docker_hub_repo_readme_file_path: src/k8s/DOCKER_README.md
@@ -45,21 +47,6 @@ jobs:
               src/k8s/**
             additional_apt_packages: ""
             additional_provisioning_script: "src/k8s/provisioning.sh"
-
-          - dockerfile: src/Dockerfile.dev
-            base_image_tag: "1.2"
-            image_name: tf-eks-devcontainer
-            devcontainer_subfolder: src/eks
-            docker_hub_repo_readme_file_path: src/eks/DOCKER_README.md
-            docker_hub_repo_short_description: |
-              Devcontainer for AWS EKS workloads that run on Terraform and Terratest
-            additional_files_to_watch: |
-              src/eks/**
-            # Groff is needed because without it, AWS cli documentation doesn't
-            # work as expected
-            additional_apt_packages: |
-              groff
-            additional_provisioning_script: ""
 
     steps:
       - name: Checkout code
@@ -73,26 +60,23 @@ jobs:
         with:
           files: |
             ${{ matrix.images.dockerfile }}
-            ${{ matrix.images.additional_files_to_watch }}
+            ${{ matrix.images.additionalFilesToWatch }}
             .github/workflows/build-and-push.yml
-
-      - name: Get latest tag
-        id: latest_tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        with:
-          fallback: tag-unavailable
 
       - name: Declare run state
         id: run_state
         run: |
-          if [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
-            [ ${{ github.event_name }} == workflow_dispatch ] || \
-            [ ${{ steps.latest_tag.outputs.tag }} != tag-unavailable ];
+          if [ ${{ github.ref_type }} == tag ] && \
+             [ ${{ matrix.images.enabled }} == 'true' ] && \
+            ( \
+              [ ${{ steps.changed_files.outputs.any_modified }} == true ] || \
+              [ ${{ github.event_name }} == workflow_dispatch ] \
+            );
           then
-            echo "::set-output name=run_docker_build::true"
+            echo "run_docker_build=true" >> $GITHUB_OUTPUT
             echo "::debug::Docker build will carry out as expected."
           else
-            echo "::set-output name=run_docker_build::false"
+            echo "run_docker_build=false" >> $GITHUB_OUTPUT
             echo "Docker build is cancelled as the required conditions for a run haven't been met"
           fi
 
@@ -100,10 +84,10 @@ jobs:
         if: steps.run_state.outputs.run_docker_build == 'true'
         id: variables
         run: |
-          repo_tag=${{ steps.latest_tag.outputs.tag }}
+          repo_tag=${{ github.ref_name }}
           image_tag=${{ matrix.images.base_image_tag }}.${repo_tag//\//-}
-          image_ref=${{ matrix.images.image_name }}:$image_tag
-          echo "::set-output name=image_tag::$image_tag"
+          image_ref=${{ matrix.images.containerName }}:$image_tag
+          echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
 
       - name: Build and push ${{ steps.variables.outputs.image_ref }}
         if: steps.run_state.outputs.run_docker_build == 'true'
@@ -125,12 +109,3 @@ jobs:
             ${{ matrix.images.docker_hub_repo_short_description }}
           docker_hub_repo_readme_file_path: |
             ${{ matrix.images.docker_hub_repo_readme_file_path }}
-
-      - name: Telegram notifications
-        if: always()
-        uses: utkusarioglu/telegram-notifications@main
-        with:
-          telegram_id: ${{ secrets.TELEGRAM_ID }}
-          telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
-          job_status: ${{ job.status }}
-          github_context: ${{ toJson(github) }}
