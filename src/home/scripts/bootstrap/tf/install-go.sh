@@ -6,6 +6,8 @@ bash --version
 ARGS=(
   go_version
   terragrunt_version
+  terraform_docs_version
+  trivy_version
 )
 . ${0%/*}/../linux/parse-args.sh
 
@@ -58,12 +60,6 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client --output=yaml
 
-# wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-${helm_version}-linux-amd64.tar.gz.asc
-# # wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-v3.17.0-linux-amd64.tar.gz.asc
-# tar -zxvf helm.tar.gz
-# mv linux-amd64/helm /usr/local/bin/helm
-# rm helm.tar.gz
-
 # Install helm
 wget -O get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
@@ -76,3 +72,13 @@ wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
 unzip awscliv2.zip
 ./aws/install
 aws --version
+
+# Install terraform docs
+wget -O ./terraform-docs.tar.gz https://terraform-docs.io/dl//terraform-docs-${terraform_docs_version}-$(uname)-amd64.tar.gz
+tar -xzf terraform-docs.tar.gz
+chmod +x terraform-docs
+mv terraform-docs /some-dir-in-your-PATH/terraform-docs
+
+# Install Trivy
+wget -s https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+  |  sh -s -- -b /usr/local/bin ${trivy_version}
