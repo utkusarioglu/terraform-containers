@@ -28,7 +28,9 @@ RUN ${BOOTSTAP_ABSPATH}/linux/install-apt.sh --no-check "${APT_PACKAGES_SILENT}"
 
 RUN ${BOOTSTAP_ABSPATH}/linux/install-apt.sh "${APT_PACKAGES}"
 
-RUN ${BOOTSTAP_ABSPATH}/tf/install-go.sh ${GO_VERSION} ${HELM_VERSION}
+RUN ${BOOTSTAP_ABSPATH}/tf/install-go.sh \
+  ${GO_VERSION} \
+  ${HELM_VERSION}
 
 RUN ${BOOTSTAP_ABSPATH}/linux/clean-apt.sh
 
