@@ -1,15 +1,15 @@
 name: build-and-push
 
-on:
-  push:
-    tags:
-      - "**"
-      - feature/**/**
-      - experiment/**/**/**
-    paths:
-      - src/**
-      - .github/workflows/build-and-push.yml
-  workflow_dispatch:
+# on:
+#   push:
+#     tags:
+#       - "**"
+#       - feature/**/**
+#       - experiment/**/**/**
+#     paths:
+#       - src/**
+#       - .github/workflows/build-and-push.yml
+#   workflow_dispatch:
 
 env:
   CACHE_FROM_SRC: /tmp/.buildx-cache

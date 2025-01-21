@@ -1,0 +1,64 @@
+name: Build and push
+
+on:
+  workflow_call:
+    inputs: 
+      image_tag:
+        description: Tag of the final docker image
+        type: string
+        required: true
+      base_tag:
+        description: Ubuntu base image tag
+        type: string
+        required: true
+    secrets:
+      dockerhub_username: 
+        required: true
+      dockerhub_token: 
+        required: true 
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        images:
+          - go_version: "1.23.5"
+            image_name: tf-devcontainer
+            base_image: ubuntu-devcontainer
+            base_tag: ${{ inputs.base_tag }}
+            image_tag: ${{ inputs.image_tag }}
+            docker_context: src
+            dockerfile_path: src/tf.dockerfile
+            devcontainer_run_cmd_path: /home/dev/scripts/bootstrap/node/check-devcontainer.sh
+            dockerhub_repo_readme_file_path: src/DOCKER_README.md
+            devcontainer_subfolder: src
+            apt_packages: |
+              less
+              zip
+            apt_packages_silent: ""
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: utkusarioglu/devcontainer-build@main
+        with:
+          docker_context: ${{ matrix.images.docker_context }}
+          dockerhub_username: ${{ secrets.dockerhub_username }}
+          dockerhub_token: ${{ secrets.dockerhub_token }}
+          image_name: ${{ matrix.images.image_name }}
+          image_tag: ${{ matrix.images.image_tag }}
+          dockerfile_path: ${{ matrix.images.dockerfile_path }}
+          build_args: |
+            BASE_TAG=${{ matrix.images.base_tag }}
+            BASE_IMAGE=${{ matrix.images.base_image }}
+            NODE_VERSION=${{ matrix.images.node_version }}
+            APT_PACKAGES=${{ matrix.images.apt_packages }}
+            APT_PACKAGES_SILENT=${{ matrix.images.apt_packages_silent }}
+          devcontainer_enabled: "false"
+          devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
+          devcontainer_run_cmd_path: ${{ matrix.images.devcontainer_run_cmd_path }}
+          dockerhub_repo_short_description: Terraform devcontainers
+          dockerhub_repo_readme_file_path: ${{ matrix.images.dockerhub_repo_readme_file_path }}
