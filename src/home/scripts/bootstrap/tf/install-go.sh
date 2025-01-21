@@ -82,6 +82,6 @@ mv terraform-docs /usr/local/bin/terraform-docs
 terraform-docs --version
 
 # Install Trivy
-wget -s https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+wget -s -O - https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
   |  sh -s -- -b /usr/local/bin ${trivy_version}
 trivy --version
