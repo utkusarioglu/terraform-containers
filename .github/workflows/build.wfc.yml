@@ -54,7 +54,7 @@ jobs:
           build_args: |
             BASE_TAG=${{ matrix.images.base_tag }}
             BASE_IMAGE=${{ matrix.images.base_image }}
-            NODE_VERSION=${{ matrix.images.node_version }}
+            GO_VERSION=${{ matrix.images.go_version }}
             APT_PACKAGES=${{ matrix.images.apt_packages }}
             APT_PACKAGES_SILENT=${{ matrix.images.apt_packages_silent }}
           devcontainer_enabled: "false"
