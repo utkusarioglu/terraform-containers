@@ -53,11 +53,16 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client --output=yaml
 
 # Install helm
-wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-${helm_version}-linux-amd64.tar.gz.asc
-# wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-v3.17.0-linux-amd64.tar.gz.asc
-tar -zxvf helm.tar.gz
-mv linux-amd64/helm /usr/local/bin/helm
-rm helm.tar.gz
+# wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-${helm_version}-linux-amd64.tar.gz.asc
+# # wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-v3.17.0-linux-amd64.tar.gz.asc
+# tar -zxvf helm.tar.gz
+# mv linux-amd64/helm /usr/local/bin/helm
+# rm helm.tar.gz
+
+wget -O get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+rm get_helm.sh
 helm --version
 
 # Install aws cli
