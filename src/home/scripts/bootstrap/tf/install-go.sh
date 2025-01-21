@@ -74,7 +74,8 @@ unzip awscliv2.zip
 aws --version
 
 # Install terraform docs
-wget -O ./terraform-docs.tar.gz https://terraform-docs.io/dl//terraform-docs-${terraform_docs_version}-$(uname)-amd64.tar.gz
+# wget -O ./terraform-docs.tar.gz https://terraform-docs.io/dl//terraform-docs-${terraform_docs_version}-$(uname)-amd64.tar.gz
+wget -O ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${terraform_docs_version}/terraform-docs-${terraform_docs_version}-linux-amd64.tar.gz
 tar -xzf terraform-docs.tar.gz
 chmod +x terraform-docs
 mv terraform-docs /some-dir-in-your-PATH/terraform-docs
