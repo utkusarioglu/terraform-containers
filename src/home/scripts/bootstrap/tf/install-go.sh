@@ -5,7 +5,7 @@ bash --version
 
 ARGS=(
   go_version
-  helm_version
+  terragrunt_version
 )
 . ${0%/*}/../linux/parse-args.sh
 
@@ -24,6 +24,12 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
 apt update
 apt install terraform
 terraform -help
+
+# Install terragrunt
+wget -O terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${terragrunt_version}/terragrunt_linux_amd64
+chmod +x terragrunt
+mv terragrunt /usr/local/bin/terragrunt
+terragrunt --version
 
 # Install hclq
 wget -O install-hclq.sh https://install.hclq.sh
@@ -52,13 +58,13 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client --output=yaml
 
-# Install helm
 # wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-${helm_version}-linux-amd64.tar.gz.asc
 # # wget -O helm.tar.gz https://github.com/helm/helm/releases/download/${helm_version}/helm-v3.17.0-linux-amd64.tar.gz.asc
 # tar -zxvf helm.tar.gz
 # mv linux-amd64/helm /usr/local/bin/helm
 # rm helm.tar.gz
 
+# Install helm
 wget -O get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
