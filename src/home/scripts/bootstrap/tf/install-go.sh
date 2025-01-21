@@ -24,6 +24,7 @@ hclq --version
 
 # Install infracost
 wget -O install-infracost.sh https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+chmod +x install-infracost.sh
 ./install-infracost.sh
 rm install-infracost.sh
 RUN mkdir -p $HOME/.config/infracost
