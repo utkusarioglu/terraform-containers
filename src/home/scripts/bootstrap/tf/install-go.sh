@@ -63,7 +63,7 @@ wget -O get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get
 chmod 700 get_helm.sh
 ./get_helm.sh
 rm get_helm.sh
-helm --version
+helm version
 
 # Install aws cli
 wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" 
