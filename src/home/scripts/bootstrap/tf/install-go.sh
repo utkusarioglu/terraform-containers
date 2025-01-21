@@ -27,7 +27,7 @@ wget -O install-infracost.sh https://raw.githubusercontent.com/infracost/infraco
 chmod +x install-infracost.sh
 ./install-infracost.sh
 rm install-infracost.sh
-RUN mkdir -p $HOME/.config/infracost
+mkdir -p $HOME/.config/infracost
 # RUN chown -R $USERNAME:$GROUP $HOME/.config
 infracost --version
 
