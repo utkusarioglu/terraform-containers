@@ -35,8 +35,8 @@ jobs:
             devcontainer_run_cmd_path: /home/dev/scripts/bootstrap/node/check-devcontainer.sh
             dockerhub_repo_readme_file_path: src/DOCKER_README.md
             devcontainer_subfolder: src
-            apt_packages: less zip unzip
-            apt_packages_silent: ""
+            apt_packages: less zip
+            apt_packages_silent: unzip
 
     steps:
       - uses: actions/checkout@v4
