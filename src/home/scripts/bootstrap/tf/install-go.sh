@@ -26,7 +26,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
   | tee /etc/apt/sources.list.d/hashicorp.list
 apt update
 apt install terraform
-rm terraform-docs.tar.gz
 terraform -help
 
 # Install terragrunt
@@ -85,6 +84,7 @@ wget -O ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs
 tar -xzf terraform-docs.tar.gz
 chmod +x terraform-docs
 mv terraform-docs /usr/local/bin/terraform-docs
+rm -f terraform-docs.tar.gz
 terraform-docs --version
 
 # Install Trivy
