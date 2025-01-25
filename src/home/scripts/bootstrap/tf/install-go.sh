@@ -9,7 +9,7 @@ ARGS=(
   terraform_docs_version
   trivy_version
 )
-. /home/dev/scripts/linux/parse-args.sh
+. /home/dev/scripts/utils/parse-args.sh
 
 # Install go
 go_url=https://go.dev/dl/go${go_version}.linux-amd64.tar.gz
