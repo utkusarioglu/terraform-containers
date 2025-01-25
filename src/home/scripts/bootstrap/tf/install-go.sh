@@ -9,7 +9,7 @@ ARGS=(
   terraform_docs_version
   trivy_version
 )
-. ${0%/*}/../linux/parse-args.sh
+. /home/dev/scripts/linux/parse-args.sh
 
 # Install go
 go_url=https://go.dev/dl/go${go_version}.linux-amd64.tar.gz
@@ -17,6 +17,7 @@ wget -O go.tar.gz ${go_url}
 rm -rf /usr/local/go
 tar -C /usr/local -xzf go.tar.gz
 export PATH=$PATH:/usr/local/go/bin
+rm go.tar.gz
 go version
 
 # Install terraform
@@ -25,6 +26,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
   | tee /etc/apt/sources.list.d/hashicorp.list
 apt update
 apt install terraform
+rm terraform-docs.tar.gz
 terraform -help
 
 # Install terragrunt
@@ -68,9 +70,13 @@ rm get_helm.sh
 helm version
 
 # Install aws cli
+mkdir aws
+cd $_
 wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" 
 unzip awscliv2.zip
 ./aws/install
+cd ..
+rm -rf aws
 aws --version
 
 # Install terraform docs
