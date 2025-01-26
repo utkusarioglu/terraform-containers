@@ -91,3 +91,6 @@ terraform-docs --version
 wget -q -O - https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
   |  sh -s -- -b /usr/local/bin ${trivy_version}
 trivy --version
+
+# Install tflint
+curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
