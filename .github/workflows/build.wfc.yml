@@ -35,7 +35,7 @@ jobs:
             docker_context: src
             dockerfile_path: src/tf.dockerfile
             devcontainer_run_cmd_path: /home/dev/scripts/bootstrap/node/check-devcontainer.sh
-            dockerdub_repo_description_update: false
+            dockerhub_repo_description_update: false
             dockerhub_repo_readme_file_path: src/DOCKER_README.md
             devcontainer_subfolder: src
             apt_packages: groff
@@ -65,6 +65,6 @@ jobs:
           devcontainer_enabled: "false"
           devcontainer_subfolder: ${{ matrix.images.devcontainer_subfolder }}
           devcontainer_run_cmd_path: ${{ matrix.images.devcontainer_run_cmd_path }}
-          dockerdub_repo_description_update: ${{ matrix.images.dockerdub_repo_description_update }}
+          dockerhub_repo_description_update: ${{ matrix.images.dockerhub_repo_description_update }}
           dockerhub_repo_short_description: Terraform devcontainers
           dockerhub_repo_readme_file_path: ${{ matrix.images.dockerhub_repo_readme_file_path }}
